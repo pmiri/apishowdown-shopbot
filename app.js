@@ -34,5 +34,7 @@ if(process.env.NODE_ENV === 'production'){
     https.createServer(options, function (req, res) {
     res.writeHead(200);
     res.end("https port listening on" + 8000);
-    }).listen(8000);
+    }).listen(8000, function(){
+        console.info('https listening on port: ' + 8000)
+    });
 }
