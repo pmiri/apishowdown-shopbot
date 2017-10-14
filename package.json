@@ -1,0 +1,19 @@
+{
+  "name": "apishowdown-shopbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "git+https://github.com/pmiri/apishowdown-shopbot.git",
+  "author": "pmiri <pmiriello@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pmiri/apishowdown-shopbot/issues"
+  },
+  "homepage": "https://github.com/pmiri/apishowdown-shopbot#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
