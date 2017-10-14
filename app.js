@@ -2,6 +2,8 @@ const express = require('express')
 const http = require('http')
 const https = require('https')
 
+require('dotenv').config()
+
 const app = express()
 
 var fs = require('fs');
