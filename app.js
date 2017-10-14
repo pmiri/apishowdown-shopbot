@@ -1,6 +1,10 @@
 const express = require('express')
+const http = require('http')
+const https = require('https')
 
 const app = express()
+
+var fs = require('fs');
 
 app.use(express.static('static'))
 
@@ -10,6 +14,23 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+
+
+
+http.createServer(app).listen(3000, function(){
+    console.info('http listening on port: ' + 3000)
 })
+
+if(process.env.NODE_ENV === 'production'){
+
+    var options = {
+        key: fs.readFileSync('/etc/letsencrypt/live/shopbot.pmir.me/privkey.pem'),
+        cert: fs.readFileSync('/etc/letsencrypt/live/shopbot.pmir.me/cert.pem'),
+        ca: fs.readFileSync('/etc/letsencrypt/live/shopbot.pmir.me/chain.pem')
+      };
+
+    https.createServer(options, function (req, res) {
+    res.writeHead(200);
+    res.end("https port listening on" + 8000);
+    }).listen(8000);
+}
