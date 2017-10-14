@@ -16,7 +16,9 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
-
+app.get('/menu/show', function(req, res){
+    res.send('you got the menu')
+})
 
 
 http.createServer(app).listen(3000, function(){
