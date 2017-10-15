@@ -40,18 +40,31 @@ app.post('/', function (req, res) {
 
 console.log(req.body)
 
-if(req.body.result.action === 'menu.show'){
-    var send_object = {'speech': 'What would you like to eat?',
+var send_object = {}
+switch(req.body.result.action){
+    case 'menu.show':
+    send_object = {'speech': 'What would you like to eat?',
                 'displayText': 'Place your order',
                 'messages':
                 [
                 {'title': 'Place your order',
-                    'replies': ['Hot Dog',
-                                'Chili Dog',
-                                'Deep Dish'],
+                    'replies': ['Hot Dog $2',
+                                'Chili Dog $3',
+                                'Deep Dish $10'],
                     'type': 2}],
                 'source': 'Chi Pizza'
                     }
+                    break;
+    case 'list.pay':
+    send_object = {
+        'messages':
+        [
+        {'title': 'Your order has been confirmed',
+            'type': 1},
+        {'title': 'You paid with your Discover Card!', 'type':1}]
+    }
+    break;
+
 }
  res.setHeader('Content-Type', 'application/json');
  res.send(JSON.stringify(send_object))
