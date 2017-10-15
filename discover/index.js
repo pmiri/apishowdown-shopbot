@@ -19,6 +19,10 @@ var fs = require('fs');
 
 require('dotenv').config()
 
+var sessionId = shortid.generate()
+var keystore = jose.JWK.createKeyStore();
+var json = ""
+
 function getOrCreateCreditCard(){
 var kid64 = crypto.createHash('sha256').update(fs.readFileSync(process.env.PKEY_PATH)).digest('base64')
     var props = {

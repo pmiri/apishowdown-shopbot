@@ -107,12 +107,6 @@ case 'list.pay':
  res.send(JSON.stringify(send_object))
 })
 
-var sessionId = shortid.generate()
-var keystore = jose.JWK.createKeyStore();
-var json = ""
-
-
-
 /**
  * Create a one-time login token for the Discover API
  */
