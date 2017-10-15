@@ -82,7 +82,7 @@ switch(req.body.result.action){
                     }
                     break;    
 
-    case 'list.add':
+    case 'menu.menu-custom':
         console.log(req.body)
         total+=menu[req.body.result.parameters.selection]
         console.log(total)
