@@ -20,6 +20,8 @@
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "http": "^0.0.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
     "sessionstore": "^1.2.18"
   }
 }

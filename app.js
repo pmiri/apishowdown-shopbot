@@ -7,6 +7,8 @@ var session = require('express-session')
 var cookieParser = require('cookie-parser')
 var sessionStore = require('sessionstore')
 
+var request = require('request')
+
 require('dotenv').config()
 
 const app = express()
@@ -46,6 +48,38 @@ app.post('/', function (req, res) {
  res.setHeader('Content-Type', 'application/json');
  res.send(JSON.stringify(send_object))
 })
+
+request({
+    url: 'https://apis.discover.com/auth/oauth/v2/token',
+    method: 'POST',
+    auth: {
+      user: 'l7xx53cc5c914bd44f659e06ca2fe34fb037',
+      pass: 'cfd853d383174b739bf014074c19dc96'
+    },
+    form: {
+      'grant_type': 'client_credentials'
+    }
+  }, function(err, res) {
+    var json = JSON.parse(res.body);
+    console.log("Access Token:", json);
+  });
+
+  /**
+  request({
+    url: 'https://apis.discover.com/nws/nwp/cof/v0/account/provision',
+    method: 'POST',
+    auth: {
+      user: 'l7xx53cc5c914bd44f659e06ca2fe34fb037',
+      pass: 'cfd853d383174b739bf014074c19dc96'
+    },
+    form: {
+      'grant_type': 'client_credentials'
+    }
+  }, function(err, res) {
+    var json = JSON.parse(res.body);
+    console.log("Access Token:", json);
+  });
+  */
 
 http.createServer(app).listen(3000, function(){
     console.info('http listening on port: ' + 3000)
