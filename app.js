@@ -34,15 +34,17 @@ app.get('/', function (req, res) {
 })
 
 app.post('/', function (req, res) {
- console.log('post made enfin')
+ var send_object = {
+    "speech": "Barack Hussein Obama II was the 44th and current President of the United States.",
+    "displayText": "Barack Hussein Obama II was the 44th and current President of the United States, and the first African American to hold the office. Born in Honolulu, Hawaii, Obama is a graduate of Columbia University   and Harvard Law School, where ",
+    "data": {},
+    "contextOut": [],
+    "source": "DuckDuckGo"
+    }
+
+ console.log(req.body)
  res.setHeader('Content-Type', 'application/json');
- res.send(JSON.stringify({
-     "speech": "Barack Hussein Obama II was the 44th and current President of the United States.",
-     "displayText": "Barack Hussein Obama II was the 44th and current President of the United States, and the first African American to hold the office. Born in Honolulu, Hawaii, Obama is a graduate of Columbia University   and Harvard Law School, where ",
-     "data": {},
-     "contextOut": [],
-     "source": "DuckDuckGo"
-     }))
+ res.send(JSON.stringify(send_object))
 })
 
 http.createServer(app).listen(3000, function(){
