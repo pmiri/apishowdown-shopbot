@@ -62,25 +62,30 @@ request({
     resolveWithFullResponse: true    
   }).then( function(res) {
     var json = JSON.parse(res.body);
-    console.log("Access Token:", json);
-  });
+    console.log("Access Token:\n", json);
 
-  /**
-  request({
-    url: 'https://apis.discover.com/nws/nwp/cof/v0/account/provision',
-    method: 'POST',
-    auth: {
-      user: 'l7xx53cc5c914bd44f659e06ca2fe34fb037',
-      pass: 'cfd853d383174b739bf014074c19dc96'
-    },
-    form: {
-      'grant_type': 'client_credentials'
-    }
-  }, function(err, res) {
+    return request({
+        url: 'https://apis.discover.com/nws/nwp/cof/v0/account/provision',
+        method: 'POST',
+        auth: {
+            'bearer': json.access_token
+          },
+        headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
+        'x-dfs-api-plan': 'NWS-COF-Sandbox',
+        'x-dfs-c-app-cert': 'dfsexxebQRNO8I-YpUtHQ3nLrzhMFzcvs38jMJrC2ISPAtFz0'
+        },
+        resolveWithFullResponse: true   
+      })
+  }).then(res => {
+    console.log('hello')
     var json = JSON.parse(res.body);
-    console.log("Access Token:", json);
-  });
-  */
+    console.log("Response:", json);
+  }).catch(err => {
+      console.log(err)
+  })
 
 http.createServer(app).listen(3000, function(){
     console.info('http listening on port: ' + 3000)
