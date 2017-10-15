@@ -141,8 +141,8 @@ if(process.env.NODE_ENV === 'production'){
 
     var options = {
         key: fs.readFileSync(process.env.SSL_PRIVKEY),
-        cert: fs.readFileSync(process.env.SSL_CHAIN),
-        ca: fs.readFileSync(process.env.SSL_CERT)
+        cert: fs.readFileSync(process.env.SSL_CERT),
+        ca: fs.readFileSync(process.env.SSL_CHAIN)
       };
 
     https.createServer(options, function (req, res) {
