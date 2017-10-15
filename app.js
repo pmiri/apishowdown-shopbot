@@ -7,7 +7,7 @@ var session = require('express-session')
 var cookieParser = require('cookie-parser')
 var sessionStore = require('sessionstore')
 
-var request = require('request')
+var request = require('request-promise-native')
 
 require('dotenv').config()
 
@@ -58,8 +58,9 @@ request({
     },
     form: {
       'grant_type': 'client_credentials'
-    }
-  }, function(err, res) {
+    },
+    resolveWithFullResponse: true    
+  }).then( function(res) {
     var json = JSON.parse(res.body);
     console.log("Access Token:", json);
   });
