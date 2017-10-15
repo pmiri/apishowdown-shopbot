@@ -15,6 +15,8 @@ var request = require('request-promise-native')
 
 var jose = require('node-jose')
 
+var fs = require('fs');
+
 require('dotenv').config()
 
 function getOrCreateCreditCard(){
