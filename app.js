@@ -61,9 +61,14 @@ app.get('/', function (req, res) {
  */
 app.post('/chatbot', function (req, res) {
 
+var total = 0;
+
+var menu = {'Hot Dog $2': 2, 'Chili Dog $3': 3, 'Deep Dish $10': 10}
+
 var send_object = {}
 switch(req.body.result.action){
     case 'menu.show':
+    total = 0;
     send_object = {'speech': ' Here is our menu. Choose one of the following options',
                 'displayText': ' Here is our menu. Choose one of the following options',
                 'messages':
@@ -76,7 +81,14 @@ switch(req.body.result.action){
                 'source': 'Chi Pizza'
                     }
                     break;    
-case 'list.pay':
+
+    case 'list.add':{
+        console.log(req.body)
+        total+=menu[req.body.result.parameters.selection]
+        console.log(total)
+    }
+
+    case 'list.pay':
 
     var discover_token = discover.getOrCreateCreditCard()
     send_object = {
