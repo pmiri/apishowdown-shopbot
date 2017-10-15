@@ -20,7 +20,7 @@ app.use(express.static('static'))
 app.use(express.static(__dirname + '/public'))
 
 app.enable('trust proxy');
-app.use(bodyParser());
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(session({
    secret: 'Super Secret Password',
@@ -36,11 +36,11 @@ app.get('/', function (req, res) {
 
 app.post('/', function (req, res) {
 
-var response = JSON.parse(req.body)
+//var response = JSON.parse(req.body)
 
-console.log(response)
+console.log(req.body)
 
-if(response.action === 'menu.show'){
+if(req.body.result.action === 'menu.show'){
     var send_object = {'speech': 'What would you like to eat?',
                 'displayText': 'Place your order',
                 'messages':
