@@ -82,11 +82,11 @@ switch(req.body.result.action){
                     }
                     break;    
 
-    case 'list.add':{
+    case 'list.add':
         console.log(req.body)
         total+=menu[req.body.result.parameters.selection]
         console.log(total)
-    }
+        break;
 
     case 'list.pay':
 
