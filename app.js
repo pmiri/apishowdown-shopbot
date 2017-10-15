@@ -37,7 +37,8 @@ app.get('/', function (req, res) {
 app.post('/', function (req, res) {
 
 var response = JSON.parse(req.body)
- 
+
+console.log(response)
 
 if(response.action === 'menu.show'){
     var send_object = {'speech': 'What would you like to eat?',
