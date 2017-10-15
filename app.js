@@ -64,7 +64,7 @@ switch(req.body.result.action){
         'messages':
         [
         {'title': 'Your order has been confirmed',
-            'type': 1},
+            'type': 0},
         {'title': 'You paid with your Discover Card!', 'type':0}]
     }
     break;
