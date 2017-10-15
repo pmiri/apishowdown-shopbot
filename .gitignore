@@ -57,3 +57,4 @@ typings/
 # dotenv environment variables file
 .env
 
+JWE_PREPROD.discoverfinancial.com.cer.txt
