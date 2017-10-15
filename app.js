@@ -21,6 +21,8 @@ const app = express()
 
 var fs = require('fs');
 
+var discover = require('./discover')
+
 app.use(express.static('static'))
 
 app.use(express.static(__dirname + '/public'))
@@ -29,7 +31,7 @@ app.enable('trust proxy');
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(session({
-   secret: 'Super Secret Password',
+   secret: process.env.SECRET,
    proxy: true,
    key: 'session.sid',
    cookie: {secure: true},
@@ -40,11 +42,10 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })       
 
-app.post('/', function (req, res) {
-
-//var response = JSON.parse(req.body)
-
-console.log(req.body)
+/**
+ * POST location for our chatbot console to get answers
+ */
+app.post('/chatbot', function (req, res) {
 
 var send_object = {}
 switch(req.body.result.action){
@@ -60,8 +61,10 @@ switch(req.body.result.action){
                     'type': 2}],
                 'source': 'Chi Pizza'
                     }
-                    break;
-    case 'list.pay':
+                    break;    
+case 'list.pay':
+
+    var discover_token = discover.getOrCreateCreditCard()
     send_object = {
 
         "speech": "Payment Complete",
@@ -84,16 +87,14 @@ switch(req.body.result.action){
       ]
     }
     break;
-
+    default: send_object = {"speech": "I don't know what to do!"}; break;
 }
  res.setHeader('Content-Type', 'application/json');
  res.send(JSON.stringify(send_object))
 })
 
 var sessionId = shortid.generate()
-
 var keystore = jose.JWK.createKeyStore();
-
 var json = ""
 
 var fake_cc = {
@@ -106,6 +107,9 @@ var fake_cc = {
     source: "on-file"
 }
 
+/**
+ * Create a one-time login token for the Discover API
+ */
 request({
     url: 'https://apis.discover.com/auth/oauth/v2/token',
     method: 'POST',
@@ -120,61 +124,15 @@ request({
   }).then( function(res) {
     json = JSON.parse(res.body);
     console.log("Access Token:\n", json);
-
-    var kid64 = crypto.createHash('sha256').update(fs.readFileSync(process.env.PKEY_PATH)).digest('base64')
-
-    var props = {
-        kid: kid64,
-        alg: 'RSA1_5',
-        use: 'enc'
-    }
-
-    return keystore.generate("oct", 256, props)
-}).then( key => {
-
-    return jose.JWE.createEncrypt(JSON.stringify(key))
-    .update(fake_cc)
-    .final()
   })
-    .then(function(result) {
-      
-    console.log(result)
-
-    return request({
-        url: 'https://apis.discover.com/nws/nwp/cof/v0/account/provision',
-        method: 'POST',
-        auth: {
-            bearer: json.access_token
-          },
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-store',
-        'x-dfs-api-plan': 'NWS-COF-Sandbox',
-        'x-dfs-c-app-cert': 'dfsexxebQRNO8I-YpUtHQ3nLrzhMFzcvs38jMJrC2ISPAtFz0'
-        },
-        body: {
-            'requestId': shortid.generate(),
-            'sessionId': sessionId,
-            'userContext': {
-                'walletId': '6011000010048738'
-            },
-            'accountProvisionRequest':{
-                'secureContext':{
-                    'encryptedContent':JSON.stringify(result)
-                }
-            },
-            'programId': 8020
-        },
-        json: true,
-        resolveWithFullResponse: true   
-      })
-  }).then(res => {
-    console.log("Response:", res.body);
-  }).catch(err => {
+    .catch(err => {
       console.log(err)
   })
 
+/**
+ * Start Server
+ * HTTP and HTTPS compliant
+ */
 http.createServer(app).listen(3000, function(){
     console.info('http listening on port: ' + 3000)
 })
@@ -182,9 +140,9 @@ http.createServer(app).listen(3000, function(){
 if(process.env.NODE_ENV === 'production'){
 
     var options = {
-        key: fs.readFileSync('/etc/letsencrypt/live/shopbot.pmir.me/privkey.pem'),
-        cert: fs.readFileSync('/etc/letsencrypt/live/shopbot.pmir.me/cert.pem'),
-        ca: fs.readFileSync('/etc/letsencrypt/live/shopbot.pmir.me/chain.pem')
+        key: fs.readFileSync(process.env.SSL_PRIVKEY),
+        cert: fs.readFileSync(process.env.SSL_CHAIN),
+        ca: fs.readFileSync(process.env.SSL_CERT)
       };
 
     https.createServer(options, function (req, res) {
