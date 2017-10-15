@@ -50,11 +50,11 @@ app.post('/chatbot', function (req, res) {
 var send_object = {}
 switch(req.body.result.action){
     case 'menu.show':
-    send_object = {'speech': 'What would you like to eat?',
-                'displayText': 'Place your order',
+    send_object = {'speech': ' Here is our menu. Choose one of the following options',
+                'displayText': ' Here is our menu. Choose one of the following options',
                 'messages':
                 [
-                {'title': 'Place your order',
+                {'title': ' Here is our menu. Choose one of the following options',
                     'replies': ['Hot Dog $2',
                                 'Chili Dog $3',
                                 'Deep Dish $10'],
