@@ -72,7 +72,13 @@ switch(req.body.result.action){
         {
             "type": 0,
             "id": shortid.generate(),
-            "speech": "You used your Discover Card for this transaction!."
+            "speech": "You used your Discover Card for this transaction!"
+          },
+          {
+            "type": 3,
+            "platform": "facebook",
+            "id": "beddaed6-91d8-4262-8f0a-cdc46e0c887b",
+            "imageUrl": "https://www.discover.com/company/newsroom/images/img-download-discover-logo.jpg"
           }
       ]
     }
@@ -99,6 +105,20 @@ request({
   }).then( function(res) {
     var json = JSON.parse(res.body);
     console.log("Access Token:\n", json);
+
+    var key = {
+        kty:""
+    }
+
+    var input = "some string for now"
+
+    return jose.JWE.createEncrypt(key).
+    update(input).
+    final()
+  })
+    .then(function(result) {
+      // {result} is a JSON Object -- JWE using the JSON General Serialization
+
     return request({
         url: 'https://apis.discover.com/nws/nwp/cof/v0/account/provision',
         method: 'POST',
@@ -120,9 +140,8 @@ request({
             },
             'accountProvisionRequest':{
                 'secureContext':{
-                    'encryptedContent':"HEREGOSOMETHING"
-                },
-            
+                    'encryptedContent':JSON.stringify(result)
+                }
             },
             'programId': 8020
         },
