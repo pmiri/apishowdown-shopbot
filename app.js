@@ -7,6 +7,8 @@ var session = require('express-session')
 var cookieParser = require('cookie-parser')
 var sessionStore = require('sessionstore')
 
+var crypto = require('crypto')
+
 var shortid = require('shortid')
 
 var request = require('request-promise-native')
@@ -90,6 +92,20 @@ switch(req.body.result.action){
 
 var sessionId = shortid.generate()
 
+var keystore = jose.JWK.createKeyStore();
+
+var json = ""
+
+var fake_cc = {
+    pan: process.env.PAN,
+    expDate: '0419',
+    cardHolderName: 'Francis M',
+    billingAddr: '123 Fake Street',
+    billingZip: '12345',
+    cid: '1234',
+    source: "on-file"
+}
+
 request({
     url: 'https://apis.discover.com/auth/oauth/v2/token',
     method: 'POST',
@@ -102,21 +118,27 @@ request({
     },
     resolveWithFullResponse: true    
   }).then( function(res) {
-    var json = JSON.parse(res.body);
+    json = JSON.parse(res.body);
     console.log("Access Token:\n", json);
 
-    var key = {
-        kty:""
+    var kid64 = crypto.createHash('sha256').update(fs.readFileSync(process.env.PKEY_PATH)).digest('base64')
+
+    var props = {
+        kid: kid64,
+        alg: 'RSA1_5',
+        use: 'enc'
     }
 
-    var input = "some string for now"
+    return keystore.generate("oct", 256, props)
+}).then( key => {
 
-    return jose.JWE.createEncrypt(key).
-    update(input).
-    final()
+    return jose.JWE.createEncrypt(JSON.stringify(key))
+    .update(fake_cc)
+    .final()
   })
     .then(function(result) {
-      // {result} is a JSON Object -- JWE using the JSON General Serialization
+      
+    console.log(result)
 
     return request({
         url: 'https://apis.discover.com/nws/nwp/cof/v0/account/provision',
