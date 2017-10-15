@@ -61,11 +61,20 @@ switch(req.body.result.action){
                     break;
     case 'list.pay':
     send_object = {
-        'messages':
-        [
-        {'title': 'Your order has been confirmed',
-            'type': 0},
-        {'title': 'You paid with your Discover Card!', 'type':0}]
+
+        "speech": "Payment Complete",
+      "messages": [
+        {
+          "type": 0,
+          "id": shortid.generate(),
+          "speech": "Your payment has been processed."
+        },
+        {
+            "type": 0,
+            "id": shortid.generate(),
+            "speech": "You used your Discover Card for this transaction!."
+          }
+      ]
     }
     break;
 
