@@ -7,7 +7,11 @@ var session = require('express-session')
 var cookieParser = require('cookie-parser')
 var sessionStore = require('sessionstore')
 
+var shortid = require('shortid')
+
 var request = require('request-promise-native')
+
+var jose = require('node-jose')
 
 require('dotenv').config()
 
@@ -70,6 +74,8 @@ switch(req.body.result.action){
  res.send(JSON.stringify(send_object))
 })
 
+var sessionId = shortid.generate()
+
 request({
     url: 'https://apis.discover.com/auth/oauth/v2/token',
     method: 'POST',
@@ -84,12 +90,11 @@ request({
   }).then( function(res) {
     var json = JSON.parse(res.body);
     console.log("Access Token:\n", json);
-  /**
     return request({
         url: 'https://apis.discover.com/nws/nwp/cof/v0/account/provision',
         method: 'POST',
         auth: {
-            'bearer': json.access_token
+            bearer: json.access_token
           },
         headers: {
         'Accept': 'application/json',
@@ -99,18 +104,24 @@ request({
         'x-dfs-c-app-cert': 'dfsexxebQRNO8I-YpUtHQ3nLrzhMFzcvs38jMJrC2ISPAtFz0'
         },
         body: {
+            'requestId': shortid.generate(),
+            'sessionId': sessionId,
             'userContext': {
                 'walletId': '6011000010048738'
             },
-            'programId': '8020'
+            'accountProvisionRequest':{
+                'secureContext':{
+                    'encryptedContent':"HEREGOSOMETHING"
+                },
+            
+            },
+            'programId': 8020
         },
+        json: true,
         resolveWithFullResponse: true   
       })
   }).then(res => {
-    console.log('hello')
-    var json = JSON.parse(res.body);
-    console.log("Response:", json);
-    */
+    console.log("Response:", res.body);
   }).catch(err => {
       console.log(err)
   })
