@@ -76,7 +76,6 @@ switch(req.body.result.action){
           },
           {
             "type": 3,
-            "platform": "facebook",
             "id": "beddaed6-91d8-4262-8f0a-cdc46e0c887b",
             "imageUrl": "https://www.discover.com/company/newsroom/images/img-download-discover-logo.jpg"
           }
