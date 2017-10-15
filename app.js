@@ -27,21 +27,48 @@ app.use(session({
    proxy: true,
    key: 'session.sid',
    cookie: {secure: true},
-//NEVER use in-memory store for production - I'm using mongoose/mongodb here
    store: sessionStore.createSessionStore()
 }));
 
 app.get('/', function (req, res) {
   res.send('Hello World!')
-})
+})       
+
+var messenger_list_payload = {
+    "template_type": "list",
+    "top_element_style": "compact",
+    "elements": [
+        {
+          "title": "Hot Dog Menu",
+          "subtitle": "Here's some grub",        
+          "buttons": [
+            {
+              "title": "Chili Cheese Dog",           
+            },
+            {
+                "title": "Veggie Dog"
+            }
+          ]
+        }
+    ]
+}
+
+var fb_rich_attachment = {
+    "facebook": {
+      "attachment": {
+        "type": "template",
+        "payload": messenger_list_payload
+      }
+    }
+  }
 
 app.post('/', function (req, res) {
  var send_object = {
-    "speech": "Barack Hussein Obama II was the 44th and current President of the United States.",
-    "displayText": "Barack Hussein Obama II was the 44th and current President of the United States, and the first African American to hold the office. Born in Honolulu, Hawaii, Obama is a graduate of Columbia University   and Harvard Law School, where ",
-    "data": {},
+    "speech": "Here's some dang ol' data",
+    "displayText": "From FB I hear",
+    "data": fb_rich_attachment,
     "contextOut": [],
-    "source": "DuckDuckGo"
+    "source": "Myself"
     }
 
  console.log(req.body)
@@ -63,7 +90,7 @@ request({
   }).then( function(res) {
     var json = JSON.parse(res.body);
     console.log("Access Token:\n", json);
-
+  /**
     return request({
         url: 'https://apis.discover.com/nws/nwp/cof/v0/account/provision',
         method: 'POST',
@@ -77,12 +104,19 @@ request({
         'x-dfs-api-plan': 'NWS-COF-Sandbox',
         'x-dfs-c-app-cert': 'dfsexxebQRNO8I-YpUtHQ3nLrzhMFzcvs38jMJrC2ISPAtFz0'
         },
+        body: {
+            'userContext': {
+                'walletId': '6011000010048738'
+            },
+            'programId': '8020'
+        },
         resolveWithFullResponse: true   
       })
   }).then(res => {
     console.log('hello')
     var json = JSON.parse(res.body);
     console.log("Response:", json);
+    */
   }).catch(err => {
       console.log(err)
   })
