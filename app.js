@@ -35,19 +35,23 @@ app.get('/', function (req, res) {
 })       
 
 app.post('/', function (req, res) {
- var send_object = {'speech': 'What would you like to eat?',
-              'displayText': 'Place your order',
-              'messages':
-              [
-               {'title': 'Place your order',
-                'replies': ['Hot Dog',
-                            'Chili Dog',
-                            'Deep Dish'],
-                'type': 2}],
-              'source': 'Chi Pizza'
-}
 
- console.log(req.body)
+var response = JSON.parse(req.body)
+ 
+
+if(response.action === 'menu.show'){
+    var send_object = {'speech': 'What would you like to eat?',
+                'displayText': 'Place your order',
+                'messages':
+                [
+                {'title': 'Place your order',
+                    'replies': ['Hot Dog',
+                                'Chili Dog',
+                                'Deep Dish'],
+                    'type': 2}],
+                'source': 'Chi Pizza'
+                    }
+}
  res.setHeader('Content-Type', 'application/json');
  res.send(JSON.stringify(send_object))
 })
