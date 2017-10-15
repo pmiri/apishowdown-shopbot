@@ -34,40 +34,12 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })       
 
-var messenger_list_payload = {
-    "template_type": "list",
-    "top_element_style": "compact",
-    "elements": [
-        {
-          "title": "Hot Dog Menu",
-          "subtitle": "Here's some grub",        
-          "buttons": [
-            {
-              "title": "Chili Cheese Dog",           
-            },
-            {
-                "title": "Veggie Dog"
-            }
-          ]
-        }
-    ]
-}
-
-var fb_rich_attachment = {
-    "facebook": {
-      "attachment": {
-        "type": "template",
-        "payload": messenger_list_payload
-      }
-    }
-  }
-
 app.post('/', function (req, res) {
  var send_object = {'speech': 'What would you like to eat?',
               'displayText': 'Place your order',
               'messages':
               [
-               {'title': 'when',
+               {'title': 'Place your order',
                 'replies': ['Hot Dog',
                             'Chili Dog',
                             'Deep Dish'],
