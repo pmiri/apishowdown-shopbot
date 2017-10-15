@@ -63,13 +63,17 @@ var fb_rich_attachment = {
   }
 
 app.post('/', function (req, res) {
- var send_object = {
-    "speech": "Here's some dang ol' data",
-    "displayText": "From FB I hear",
-    "data": fb_rich_attachment,
-    "contextOut": [],
-    "source": "Myself"
-    }
+ var send_object = {'speech': 'What would you like to eat?',
+              'displayText': 'Place your order',
+              'messages':
+              [
+               {'title': 'when',
+                'replies': ['Hot Dog',
+                            'Chili Dog',
+                            'Deep Dish'],
+                'type': 2}],
+              'source': 'Chi Pizza'
+}
 
  console.log(req.body)
  res.setHeader('Content-Type', 'application/json');
