@@ -38,6 +38,20 @@ app.use(session({
    store: sessionStore.createSessionStore()
 }));
 
+
+/**
+ * Our example client
+ */
+var fake_cc = {
+    pan: process.env.PAN,
+    expDate: '0419',
+    cardHolderName: 'Francis M',
+    billingAddr: '123 Fake Street',
+    billingZip: '12345',
+    cid: '1234',
+    source: "on-file"
+}
+
 app.get('/', function (req, res) {
   res.send('Hello World!')
 })       
@@ -72,7 +86,7 @@ case 'list.pay':
         {
           "type": 0,
           "id": shortid.generate(),
-          "speech": "Your payment has been processed."
+          "speech": "Your payment has been processed. Shipping to " + fake_cc.billingAddr
         },
         {
             "type": 0,
@@ -97,15 +111,7 @@ var sessionId = shortid.generate()
 var keystore = jose.JWK.createKeyStore();
 var json = ""
 
-var fake_cc = {
-    pan: process.env.PAN,
-    expDate: '0419',
-    cardHolderName: 'Francis M',
-    billingAddr: '123 Fake Street',
-    billingZip: '12345',
-    cid: '1234',
-    source: "on-file"
-}
+
 
 /**
  * Create a one-time login token for the Discover API
